@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern GST Calculator</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+
+        .calculator-card {
+            background: var(--surface);
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--text);
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .radio-label {
+            display: block;
+            text-align: center;
+            background: var(--background);
+            border: 2px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+
+        .radio-group input[type="radio"]:checked + .radio-label {
+            border-color: var(--primary);
+            background: #e0e7ff;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+            background: var(--surface);
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .results-box {
+            background: var(--background);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--border);
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-info {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .footer-info strong {
+            color: var(--text);
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+        }
+
+        .hero-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+            .calculator-card {
+                padding: 1.25rem;
+                box-shadow: none;
+                border: none;
+                background: transparent;
+            }
+            .results-box {
+                background: var(--surface);
+                border: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="calculator-card">
+            <h1>GST Calculator</h1>
+            
+            <div class="radio-group">
+                <div>
+                    <input type="radio" id="exclusive" name="gstType" value="exclusive" checked>
+                    <label for="exclusive" class="radio-label">GST Exclusive</label>
+                </div>
+                <div>
+                    <input type="radio" id="inclusive" name="gstType" value="inclusive">
+                    <label for="inclusive" class="radio-label">GST Inclusive</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (₹)</label>
+                <input type="number" id="amount" placeholder="Enter base amount" min="0" step="any">
+            </div>
+
+            <div class="form-group">
+                <label for="gstRate">GST Rate</label>
+                <select id="gstRate">
+                    <option value="5">5%</option>
+                    <option value="12">12%</option>
+                    <option value="18" selected>18%</option>
+                    <option value="28">28%</option>
+                </select>
+            </div>
+
+            <div class="results-box">
+                <div class="result-row">
+                    <span>Net Amount:</span>
+                    <span id="resNet">₹0.00</span>
+                </div>
+                <div class="result-row">
+                    <span>CGST / SGST:</span>
+                    <span id="resSplit">₹0.00 / ₹0.00</span>
+                </div>
+                <div class="result-row">
+                    <span>Total GST Amount:</span>
+                    <span id="resGst">₹0.00</span>
+                </div>
+                <div class="result-row">
+                    <span>Total Amount:</span>
+                    <span id="resTotal">₹0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-info">
+            Name: <strong>Aakriti Arora</strong><br>
+            Email: <strong>aroraaakriti1110@gmail.com</strong>
+        </div>
+        <a href="https://digitalheroesco.com" target="_blank" class="hero-btn">Built for Digital Heroes</a>
+    </footer>
+
+    <script>
+        const amountInput = document.getElementById('amount');
+        const gstRateSelect = document.getElementById('gstRate');
+        const gstTypeRadios = document.querySelectorAll('input[name="gstType"]');
+
+        const resNet = document.getElementById('resNet');
+        const resSplit = document.getElementById('resSplit');
+        const resGst = document.getElementById('resGst');
+        const resTotal = document.getElementById('resTotal');
+
+        function calculateGST() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const rate = parseFloat(gstRateSelect.value);
+            const isInclusive = document.getElementById('inclusive').checked;
+
+            let netAmount = 0;
+            let gstAmount = 0;
+            let totalAmount = 0;
+
+            if (isInclusive) {
+                totalAmount = amount;
+                gstAmount = totalAmount - (totalAmount * (100 / (100 + rate)));
+                netAmount = totalAmount - gstAmount;
+            } else {
+                netAmount = amount;
+                gstAmount = netAmount * (rate / 100);
+                totalAmount = netAmount + gstAmount;
+            }
+
+            const splitGst = gstAmount / 2;
+
+            resNet.textContent = `₹${netAmount.toFixed(2)}`;
+            resSplit.textContent = `₹${splitGst.toFixed(2)} / ₹${splitGst.toFixed(2)}`;
+            resGst.textContent = `₹${gstAmount.toFixed(2)}`;
+            resTotal.textContent = `₹${totalAmount.toFixed(2)}`;
+        }
+
+        amountInput.addEventListener('input', calculateGST);
+        gstRateSelect.addEventListener('change', calculateGST);
+        gstTypeRadios.forEach(radio => radio.addEventListener('change', calculateGST));
+    </script>
+</body>
+</html>
