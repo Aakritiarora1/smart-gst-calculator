@@ -12,4 +12,4 @@ Developer:
 Aakriti Arora
 
 Live Demo:
-npx plugins add vercel/vercel-plugin
+https://vercel.com/aakriti2/smart-gst-calculator
